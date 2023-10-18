@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const bcrypt=require('bcryptjs');
 const validator = require('validator');
-const { default: isEmail } = require('validator/lib/isemail');
+
 
 const User=mongoose.Schema({
     name:{
@@ -31,22 +31,28 @@ const User=mongoose.Schema({
     craetedat:{
         type:Date,
         default:Date.now()
-    }
-    // confirmpassword:{
-    //     type:String,
-    //     required:true
-    // },
-    
+    },    
 })
 
+User.methods.getData = function()
+{
+    return {
+        name:this.name,
+        email:this.email,
+        mobileNo:this.mobileNo,
+        id:this._id
+    }
+}
 
 User.pre('save' , async function(next){
         
-    const salt = bcrypt.genSaltSync(10);
-    this.password =await bcrypt.hash(this.password , salt);
-    next();
+    if(this.isModified('password'))                        // only for password mate j
+    {
+        const salt = bcrypt.genSaltSync(10);
+        this.password =await bcrypt.hash(this.password , salt);
+        next();
+    }
 })
-
 
 
 const UserModel = mongoose.model('user', User)
