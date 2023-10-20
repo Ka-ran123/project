@@ -12,6 +12,8 @@ router.get("/createUser" , (req,res)=>{
 
 router.post("/signIn" , UserController.signIn)
 
-router.get("/changePassword" , UserController.changePassword)
+router.post("/changePassword" , UserController.changePassword)
+
+router.post("/forgetPassword" , UserController.forgetPassword)
 
 module.exports = router
